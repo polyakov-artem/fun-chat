@@ -31,6 +31,7 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'class-methods-use-this': 'off',
     'no-unused-expressions': 'off',
+    '@typescript-eslint/no-unused-expressions': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
     'no-unused-vars': 'off',
   },
