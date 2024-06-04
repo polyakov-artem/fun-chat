@@ -89,3 +89,13 @@ export const classSelectors = (Object.keys(classes) as (keyof typeof classes)[])
 
 export const ABOUT_APP_TEXT =
   'The application is designed to demonstrate the Fun Chat task as part of the RSSchool JavaScript/Front-end 2023Q4 course';
+
+export const historyPlaceholders = {
+  selectUser: 'Select a user to chat with...',
+  writeMessage: 'Write your first message...',
+};
+
+export const userStatuses = {
+  online: 'Online',
+  offline: 'Offline',
+};
