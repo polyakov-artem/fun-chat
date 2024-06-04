@@ -208,3 +208,14 @@ export type Notice =
   | EditMsgNotice;
 
 export type ServerResponse = Response | Notice | ErrorResponse;
+
+export type ComponentProps<Tag extends DocTag> = {
+  tag: Tag;
+  classNames?: string[];
+  text?: string;
+  attr?: Record<string, string>;
+};
+
+export type ChildComponentProps = Omit<ComponentProps<'div'>, 'tag'>;
+
+export type DocTag = keyof HTMLElementTagNameMap;
