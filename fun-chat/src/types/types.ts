@@ -217,5 +217,9 @@ export type ComponentProps<Tag extends DocTag> = {
 };
 
 export type ChildComponentProps = Omit<ComponentProps<'div'>, 'tag'>;
+export type ButtonComponentProps = ChildComponentProps & {
+  isSmall?: boolean;
+  isExtraSmall?: boolean;
+};
 
 export type DocTag = keyof HTMLElementTagNameMap;
