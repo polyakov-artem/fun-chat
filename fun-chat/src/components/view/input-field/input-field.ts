@@ -9,6 +9,8 @@ export class InputField extends Div {
 
   validationText!: Paragraph;
 
+  isValid: boolean = false;
+
   constructor(props: ChildComponentProps = {}) {
     props.classNames ??= [];
     props.classNames.push(classes.inputField);
@@ -20,5 +22,21 @@ export class InputField extends Div {
     this.input = new Input({ classNames: [classes.inputFieldControl] });
     this.validationText = new Paragraph({ classNames: [classes.inputFieldMessage] });
     this.appendComponents(this.input, this.validationText);
+  }
+
+  addValidator(validator: (value: string, minLength?: number) => string, minLength: number): void {
+    this.input.addEventListener('input', () => {
+      const errorMessage = validator(this.input.node.value, minLength);
+
+      if (errorMessage.length > 0) {
+        this.isValid = false;
+        this.addClass(classes.inputFieldInvalid);
+      } else {
+        this.isValid = true;
+        this.removeClass(classes.inputFieldInvalid);
+      }
+
+      this.validationText.setTextContent(errorMessage);
+    });
   }
 }

@@ -99,3 +99,9 @@ export const userStatuses = {
   online: 'Online',
   offline: 'Offline',
 };
+
+export const LOGIN_MIN_LENGTH = 3;
+export const PASSWORD_MIN_LENGTH = 4;
+
+export const INVALID_CHARS_TEXT = `Only english letters or "-" are allowable`;
+export const INVALID_LETTER_TEXT = 'First letter must be in uppercase';

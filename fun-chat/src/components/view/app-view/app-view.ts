@@ -17,7 +17,7 @@ export class AppView {
   }
 
   configure() {
-    this.messengerPage.redraw();
+    this.loginPage.redraw();
   }
 }
 export const appView = new AppView();
