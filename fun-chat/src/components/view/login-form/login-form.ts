@@ -7,7 +7,6 @@ import { ButtonPrimary } from '../button-primary/button-primary';
 import { InputField } from '../input-field/input-field';
 import { Input } from '../input/input';
 import { authController } from '../../controller/auth-controller/auth-controller';
-import { appView } from '../app-view/app-view';
 
 export class LoginForm extends Form {
   loginField!: InputField;
@@ -23,6 +22,8 @@ export class LoginForm extends Form {
   passwordValidationText!: Paragraph;
 
   loginBtn!: ButtonPrimary;
+
+  isValid: boolean = false;
 
   constructor(props: ChildComponentProps = {}) {
     props.classNames ??= [];
@@ -69,16 +70,30 @@ export class LoginForm extends Form {
 
     this.addEventListener('input', () => {
       if (this.loginField.isValid && this.passwordField.isValid) {
+        this.isValid = true;
         this.loginBtn.enable();
       } else {
         this.loginBtn.disable();
+        this.isValid = false;
       }
     });
 
     this.addEventListener('submit', (e) => {
       e.preventDefault();
-      appView.messengerPage.redraw();
+
+      if (!this.isValid) return false;
+
+      authController.login({
+        login: this.loginInput.node.value,
+        password: this.passwordInput.node.value,
+      });
+
       return false;
     });
+  }
+
+  clearForm() {
+    this.node.reset();
+    this.loginBtn.disable();
   }
 }

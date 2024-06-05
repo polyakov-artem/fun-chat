@@ -1,5 +1,6 @@
 import { classes } from '../../../common/js/constants';
 import { ChildComponentProps } from '../../../types/types';
+import { authController } from '../../controller/auth-controller/auth-controller';
 import { appView } from '../app-view/app-view';
 import { Button } from '../button/button';
 import { Div } from '../div/div';
@@ -52,7 +53,7 @@ export class MessengerHeader extends Div {
 
   addListeners() {
     this.logoutBtn.addEventListener('click', () => {
-      appView.loginPage.redraw();
+      authController.logout();
     });
 
     this.infoBtn.addEventListener('click', () => {

@@ -5,6 +5,8 @@ import { ChildComponentProps } from '../../../types/types';
 import { Div } from '../div/div';
 
 export class LoginPage extends Page {
+  loginBlock!: LoginBlock;
+
   constructor(props: ChildComponentProps = {}) {
     props.classNames ??= [];
     props.classNames.push(classes.loginPage);
@@ -17,8 +19,8 @@ export class LoginPage extends Page {
       classNames: [classes.pageInner, classes.pageInnerPlaceCenter, classes.container],
     });
 
-    const loginBlock = new LoginBlock();
-    pageInner.appendComponents(loginBlock);
+    this.loginBlock = new LoginBlock();
+    pageInner.appendComponents(this.loginBlock);
     this.appendComponents(pageInner);
   }
 }

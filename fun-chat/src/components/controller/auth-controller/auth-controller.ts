@@ -1,4 +1,12 @@
-import { INVALID_CHARS_TEXT, INVALID_LETTER_TEXT } from '../../../common/js/constants';
+import {
+  AUTH_DATA_KEY,
+  INVALID_CHARS_TEXT,
+  INVALID_LETTER_TEXT,
+} from '../../../common/js/constants';
+
+import { AuthData } from '../../../types/types';
+import { appModel } from '../../model/app-model/app-model';
+import { storageService } from '../../services/storage-service/storage-service';
 
 export class AuthController {
   validateInput(value: string, minLength: number = 3): string {
@@ -8,8 +16,23 @@ export class AuthController {
     return '';
   }
 
-  getInvalidLengthText(minLength: number) {
+  getInvalidLengthText(minLength: number): string {
     return `The length must be at least ${minLength} characters`;
+  }
+  login(authData: AuthData): void {
+    storageService.saveData(AUTH_DATA_KEY, authData);
+    appModel.login.setValue(authData.login);
+    appModel.password.setValue(authData.password);
+  }
+
+  logout(): void {
+    appModel.login.setValue(null);
+    appModel.password.setValue(null);
+    this.removeStorageAuthData();
+  }
+
+  removeStorageAuthData(): void {
+    storageService.removeData(AUTH_DATA_KEY);
   }
 }
 

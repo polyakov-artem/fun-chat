@@ -226,3 +226,5 @@ export type DocTag = keyof HTMLElementTagNameMap;
 
 export type MultipleValuesVoidFn<T> = (...args: [T]) => void;
 export type SingleValueVoidFn<T> = (value: T) => void;
+
+export type AuthData = { login: string; password: string };
