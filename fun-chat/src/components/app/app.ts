@@ -16,5 +16,10 @@ export class App {
     this.appModel = appModel;
     this.appController = appController;
     this.appView = appView;
+    this.init();
+  }
+
+  init() {
+    appController.authController.autoLogin();
   }
 }
