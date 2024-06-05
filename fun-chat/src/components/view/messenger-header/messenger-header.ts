@@ -1,5 +1,6 @@
 import { classes } from '../../../common/js/constants';
 import { ChildComponentProps } from '../../../types/types';
+import { appView } from '../app-view/app-view';
 import { Button } from '../button/button';
 import { Div } from '../div/div';
 import { HeaderH1 } from '../header-h1/header-h1';
@@ -17,6 +18,7 @@ export class MessengerHeader extends Div {
     props.classNames.push(classes.messengerHeader);
     super(props);
     this.configure();
+    this.addListeners();
   }
 
   configure() {
@@ -45,7 +47,16 @@ export class MessengerHeader extends Div {
     });
 
     buttonsWrap.appendComponents(this.infoBtn, this.logoutBtn);
-
     this.appendComponents(this.userLogin, title, buttonsWrap);
+  }
+
+  addListeners() {
+    this.logoutBtn.addEventListener('click', () => {
+      appView.loginPage.redraw();
+    });
+
+    this.infoBtn.addEventListener('click', () => {
+      appView.infoPage.redraw();
+    });
   }
 }

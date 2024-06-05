@@ -7,6 +7,7 @@ import { ButtonPrimary } from '../button-primary/button-primary';
 import { InputField } from '../input-field/input-field';
 import { Input } from '../input/input';
 import { authController } from '../../controller/auth-controller/auth-controller';
+import { appView } from '../app-view/app-view';
 
 export class LoginForm extends Form {
   loginField!: InputField;
@@ -29,7 +30,7 @@ export class LoginForm extends Form {
     super(props);
 
     this.configure();
-    this.addEventListeners();
+    this.addListeners();
   }
 
   configure(): void {
@@ -59,7 +60,7 @@ export class LoginForm extends Form {
     );
   }
 
-  addEventListeners(): void {
+  addListeners(): void {
     const validator = authController.validateInput.bind(authController);
 
     this.loginField.addValidator(validator, LOGIN_MIN_LENGTH);
@@ -72,6 +73,12 @@ export class LoginForm extends Form {
       } else {
         this.loginBtn.disable();
       }
+    });
+
+    this.addEventListener('submit', (e) => {
+      e.preventDefault();
+      appView.messengerPage.redraw();
+      return false;
     });
   }
 }
