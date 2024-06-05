@@ -108,3 +108,19 @@ export const INVALID_LETTER_TEXT = 'First letter must be in uppercase';
 
 export const STORAGE_KEY = 'fun-chat';
 export const AUTH_DATA_KEY = 'saved-user';
+
+export enum EventType {
+  userLogin = 'USER_LOGIN',
+  error = 'ERROR',
+  userLogout = 'USER_LOGOUT',
+  userExternalLogin = 'USER_EXTERNAL_LOGIN',
+  userExternalLogout = 'USER_EXTERNAL_LOGOUT',
+  userActive = 'USER_ACTIVE',
+  userInactive = 'USER_INACTIVE',
+  msgSend = 'MSG_SEND',
+  msgFromUser = 'MSG_FROM_USER',
+  msgDeliver = 'MSG_DELIVER',
+  msgRead = 'MSG_READ',
+  msgDelete = 'MSG_DELETE',
+  msgEdit = 'MSG_EDIT',
+}

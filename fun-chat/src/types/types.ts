@@ -1,18 +1,4 @@
-export enum EventType {
-  userLogin = 'USER_LOGIN',
-  error = 'ERROR',
-  userLogout = 'USER_LOGOUT',
-  userExternalLogin = 'USER_EXTERNAL_LOGIN',
-  userExternalLogout = 'USER_EXTERNAL_LOGOUT',
-  userActive = 'USER_ACTIVE',
-  userInactive = 'USER_INACTIVE',
-  msgSend = 'MSG_SEND',
-  msgFromUser = 'MSG_FROM_USER',
-  msgDeliver = 'MSG_DELIVER',
-  msgRead = 'MSG_READ',
-  msgDelete = 'MSG_DELETE',
-  msgEdit = 'MSG_EDIT',
-}
+import { EventType } from '../common/js/constants';
 
 export type BaseExchange<IdType extends string | null, EType extends EventType, Payload> = {
   id: IdType;
