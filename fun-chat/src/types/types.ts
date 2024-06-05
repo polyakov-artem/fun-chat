@@ -223,3 +223,6 @@ export type ButtonComponentProps = ChildComponentProps & {
 };
 
 export type DocTag = keyof HTMLElementTagNameMap;
+
+export type MultipleValuesVoidFn<T> = (...args: [T]) => void;
+export type SingleValueVoidFn<T> = (value: T) => void;

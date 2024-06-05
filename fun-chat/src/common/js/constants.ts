@@ -105,3 +105,6 @@ export const PASSWORD_MIN_LENGTH = 4;
 
 export const INVALID_CHARS_TEXT = `Only english letters or "-" are allowable`;
 export const INVALID_LETTER_TEXT = 'First letter must be in uppercase';
+
+export const STORAGE_KEY = 'fun-chat';
+export const AUTH_DATA_KEY = 'saved-user';
