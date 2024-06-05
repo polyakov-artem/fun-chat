@@ -31,8 +31,8 @@ export class AppView {
   handleLoginChange(login: string | null) {
     if (login === null) {
       this.loginPage.redraw();
-      this.loginPage.loginBlock.loginForm.clearForm();
     } else {
+      this.loginPage.loginBlock.loginForm.clearForm();
       this.messengerPage.redraw();
     }
   }

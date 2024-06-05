@@ -1,6 +1,7 @@
 import { classes } from '../../../common/js/constants';
 import { ChildComponentProps } from '../../../types/types';
 import { authController } from '../../controller/auth-controller/auth-controller';
+import { appModel } from '../../model/app-model/app-model';
 import { appView } from '../app-view/app-view';
 import { Button } from '../button/button';
 import { Div } from '../div/div';
@@ -20,6 +21,7 @@ export class MessengerHeader extends Div {
     super(props);
     this.configure();
     this.addListeners();
+    this.addModelListeners();
   }
 
   configure() {
@@ -58,6 +60,16 @@ export class MessengerHeader extends Div {
 
     this.infoBtn.addEventListener('click', () => {
       appView.infoPage.redraw();
+    });
+  }
+
+  addModelListeners() {
+    appModel.login.subscribe((login) => {
+      if (login === null) {
+        this.userLogin.setTextContent(`User: `);
+      } else {
+        this.userLogin.setTextContent(`User: ${login}`);
+      }
     });
   }
 }
