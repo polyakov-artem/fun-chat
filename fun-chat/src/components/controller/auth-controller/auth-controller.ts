@@ -56,8 +56,18 @@ export class AuthController {
   }
 
   logout(): void {
+    const login = appModel.login.getValue();
+    const password = appModel.password.getValue();
+
     this.removeAppAuthData();
     this.removeStorageAuthData();
+
+    if (login === null || password === null) return;
+
+    connectionService.logout({
+      login,
+      password,
+    });
   }
 
   removeStorageAuthData(): void {

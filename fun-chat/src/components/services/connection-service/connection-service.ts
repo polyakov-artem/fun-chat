@@ -12,6 +12,8 @@ import {
   ErrorResponse,
   LoginRequest,
   LoginResponse,
+  LogoutRequest,
+  LogoutResponse,
   ServerNormalResponse,
   ServerNotice,
   ServerResponse,
@@ -59,11 +61,11 @@ export class ConnectionService {
     this.errorCb = errorCb;
   }
 
-  closeConnection() {
+  closeConnection(): void {
     this.webSocket?.close();
   }
 
-  autoConnect() {
+  autoConnect(): void {
     this.connect();
 
     this.timer = setInterval(() => {
@@ -136,6 +138,35 @@ export class ConnectionService {
       },
     };
     return this.sendRequest<LoginResponse>(request);
+  }
+
+  logout(authData: AuthData): Promise<ServerResponse<LogoutResponse>> {
+    this.clearTasks();
+
+    const request: LogoutRequest = {
+      id: this.requestId,
+      type: EventType.userLogout,
+      payload: {
+        user: authData,
+      },
+    };
+
+    return this.sendRequest<LogoutResponse>(request);
+  }
+
+  clearTasks() {
+    const previousTasksMap = new Map(this.tasksMap);
+    this.tasksMap.clear();
+
+    [...previousTasksMap].forEach(([id, task]) => {
+      task.resolve({
+        id,
+        type: EventType.error,
+        payload: {
+          error: webServiceMessages.taskAborted,
+        },
+      });
+    });
   }
 
   sendRequest<T extends ServerNormalResponse>(request: ClientRequest): Promise<ServerResponse<T>> {
