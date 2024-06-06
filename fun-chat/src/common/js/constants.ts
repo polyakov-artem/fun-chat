@@ -124,3 +124,23 @@ export enum EventType {
   msgDelete = 'MSG_DELETE',
   msgEdit = 'MSG_EDIT',
 }
+
+export const SERVER_ADDRESS = '127.0.0.1';
+export const SERVER_PORT = '4000';
+export const CONNECTION_CHECK_INTERVAL = 500;
+
+export enum WebSocketReadyState {
+  connecting = 0,
+  open = 1,
+  closing = 2,
+  closed = 3,
+}
+
+export const webServiceMessages = {
+  onOpen: 'Connection established',
+  onClose: 'Connection closed',
+  connectionError: 'Connection error occured',
+  noDataInResponse: 'No data in response or request:',
+  taskAborted: 'Connection service operation aborted',
+  noConnection: 'No active connection',
+};

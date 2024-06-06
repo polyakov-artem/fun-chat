@@ -20,6 +20,6 @@ export class App {
   }
 
   init() {
-    appController.authController.autoLogin();
+    appController.connectionService.autoConnect();
   }
 }

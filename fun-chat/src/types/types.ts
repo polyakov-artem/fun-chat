@@ -6,7 +6,7 @@ export type BaseExchange<IdType extends string | null, EType extends EventType, 
   payload: Payload;
 };
 
-export type ErrorResponse = BaseExchange<string | null, EventType.error, { error: string }>;
+export type ErrorResponse = BaseExchange<string, EventType.error, { error: string }>;
 
 export type LoginExchange<Payload> = BaseExchange<string, EventType.userLogin, Payload>;
 
@@ -163,7 +163,7 @@ export type EditMsgResponsePayload = ChangedMsgPayload<Pick<MsgStatus, 'isEdited
 
 export type EditMsgNotice = EditMsgExchange<null, DeleteMsgResponsePayload>;
 
-export type Request =
+export type ClientRequest =
   | LoginRequest
   | LogoutRequest
   | ActiveUsersRequest
@@ -174,7 +174,7 @@ export type Request =
   | DeleteMsgRequest
   | EditMsgRequest;
 
-export type Response =
+export type ServerNormalResponse =
   | LoginResponse
   | LogoutResponse
   | ActiveUsersResponse
@@ -185,7 +185,7 @@ export type Response =
   | DeleteMsgResponse
   | EditMsgResponse;
 
-export type Notice =
+export type ServerNotice =
   | ExternalLoginNotice
   | ExternalLogoutNotice
   | SendMsgRecipientNotice
@@ -193,7 +193,9 @@ export type Notice =
   | DeleteMsgNotice
   | EditMsgNotice;
 
-export type ServerResponse = Response | Notice | ErrorResponse;
+export type ServerResponse<T extends ServerNormalResponse = ServerNormalResponse> =
+  | T
+  | ErrorResponse;
 
 export type ComponentProps<Tag extends DocTag> = {
   tag: Tag;
@@ -214,3 +216,10 @@ export type MultipleValuesVoidFn<T> = (...args: [T]) => void;
 export type SingleValueVoidFn<T> = (value: T) => void;
 
 export type AuthData = { login: string; password: string };
+
+export type Task<T extends ServerResponse> = {
+  promise: Promise<T>;
+  resolve: (value: T) => void;
+};
+
+export type WebSocketCb = SingleValueVoidFn<Event>;
