@@ -18,6 +18,7 @@ export class AppController {
     this.storageService = storageService;
     this.connectionService = connectionService;
     this.addConnectionListeners();
+    this.addModelListeners();
   }
 
   addConnectionListeners() {
@@ -27,6 +28,21 @@ export class AppController {
 
     this.connectionService.addOnCloseCallback(() => {
       appModel.isConnected.setValue(false);
+    });
+  }
+
+  addModelListeners() {
+    this.addConnectionChangeListeners();
+  }
+
+  addConnectionChangeListeners() {
+    appModel.isConnected.subscribe((isConnected) => {
+      if (isConnected) {
+        this.authController.autoLogin();
+        return;
+      }
+
+      this.authController.removeAppAuthData();
     });
   }
 }

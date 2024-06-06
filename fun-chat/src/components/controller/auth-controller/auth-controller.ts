@@ -1,5 +1,6 @@
 import {
   AUTH_DATA_KEY,
+  EventType,
   INVALID_CHARS_TEXT,
   INVALID_LETTER_TEXT,
   LOGIN_MIN_LENGTH,
@@ -8,6 +9,7 @@ import {
 
 import { AuthData } from '../../../types/types';
 import { appModel } from '../../model/app-model/app-model';
+import { connectionService } from '../../services/connection-service/connection-service';
 import { storageService } from '../../services/storage-service/storage-service';
 
 export class AuthController {
@@ -41,20 +43,30 @@ export class AuthController {
     this.login(authData);
   }
 
-  login(authData: AuthData): void {
+  async login(authData: AuthData): Promise<void> {
+    const response = await connectionService.login(authData);
+
+    if (response.type === EventType.error) {
+      return;
+    }
+
     storageService.saveData(AUTH_DATA_KEY, authData);
     appModel.login.setValue(authData.login);
     appModel.password.setValue(authData.password);
   }
 
   logout(): void {
-    appModel.login.setValue(null);
-    appModel.password.setValue(null);
+    this.removeAppAuthData();
     this.removeStorageAuthData();
   }
 
   removeStorageAuthData(): void {
     storageService.removeData(AUTH_DATA_KEY);
+  }
+
+  removeAppAuthData() {
+    appModel.login.setValue(null);
+    appModel.password.setValue(null);
   }
 }
 
