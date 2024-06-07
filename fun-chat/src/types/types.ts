@@ -46,7 +46,7 @@ export type UsersPayload = {
 };
 
 export type InactiveUsersExchange<Payload> = BaseExchange<string, EventType.userInactive, Payload>;
-export type InactiveUsersRequest = ActiveUsersExchange<null>;
+export type InactiveUsersRequest = InactiveUsersExchange<null>;
 export type InActiveUsersResponse = ActiveUsersExchange<UsersPayload>;
 
 export type SendMsgExchange<IdType extends string | null, Payload> = BaseExchange<

@@ -7,9 +7,13 @@ import {
   webServiceMessages,
 } from '../../../common/js/constants';
 import {
+  ActiveUsersRequest,
+  ActiveUsersResponse,
   AuthData,
   ClientRequest,
   ErrorResponse,
+  InActiveUsersResponse,
+  InactiveUsersRequest,
   LoginRequest,
   LoginResponse,
   LogoutRequest,
@@ -167,6 +171,26 @@ export class ConnectionService {
         },
       });
     });
+  }
+
+  getActiveUsers(): Promise<ServerResponse<ActiveUsersResponse>> {
+    const request: ActiveUsersRequest = {
+      id: this.requestId,
+      type: EventType.userActive,
+      payload: null,
+    };
+
+    return this.sendRequest<ActiveUsersResponse>(request);
+  }
+
+  getInactiveUsers(): Promise<ServerResponse<InActiveUsersResponse>> {
+    const request: InactiveUsersRequest = {
+      id: this.requestId,
+      type: EventType.userInactive,
+      payload: null,
+    };
+
+    return this.sendRequest<InActiveUsersResponse>(request);
   }
 
   sendRequest<T extends ServerNormalResponse>(request: ClientRequest): Promise<ServerResponse<T>> {
