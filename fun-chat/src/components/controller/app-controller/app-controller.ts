@@ -5,6 +5,10 @@ import {
 } from '../../services/connection-service/connection-service';
 import { StorageService, storageService } from '../../services/storage-service/storage-service';
 import { AuthController, authController } from '../auth-controller/auth-controller';
+import {
+  MessengerController,
+  messengerController,
+} from '../messenger-controller/messenger-controller';
 
 export class AppController {
   authController: AuthController;
@@ -13,10 +17,13 @@ export class AppController {
 
   connectionService: ConnectionService;
 
+  messengerController: MessengerController;
+
   constructor() {
     this.authController = authController;
     this.storageService = storageService;
     this.connectionService = connectionService;
+    this.messengerController = messengerController;
     this.addConnectionListeners();
     this.addModelListeners();
   }
@@ -32,10 +39,12 @@ export class AppController {
   }
 
   addModelListeners() {
+    this.addIsConnectedPropListeners();
+    this.addLoginPropListeners();
     this.addConnectionChangeListeners();
   }
 
-  addConnectionChangeListeners() {
+  addIsConnectedPropListeners() {
     appModel.isConnected.subscribe((isConnected) => {
       if (isConnected) {
         this.authController.autoLogin();
@@ -43,6 +52,12 @@ export class AppController {
       }
 
       this.authController.removeAppAuthData();
+    });
+  }
+
+  addLoginPropListeners() {
+    appModel.login.subscribe(() => {
+      this.messengerController.updateAllUsers();
     });
   }
 }

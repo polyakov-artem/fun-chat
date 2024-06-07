@@ -2,6 +2,7 @@ import { LoginPage, loginPage } from '../login-page/login-page';
 import { MessengerPage, messengerPage } from '../messenger-page/messenger-page';
 import { InfoPage, infoPage } from '../info-page/info-page';
 import { appModel } from '../../model/app-model/app-model';
+import { RegisteredUser } from '../../../types/types';
 
 export class AppView {
   loginPage: LoginPage;
@@ -23,12 +24,20 @@ export class AppView {
   }
 
   addModelListeners() {
-    appModel.login.subscribe((login) => {
-      this.handleLoginChange(login);
+    appModel.login.subscribe((login: string | null) => {
+      this.handleLoginPropChange(login);
+    });
+
+    appModel.allUsers.subscribe((allUsers: RegisteredUser[] | null) => {
+      this.handleAllUsersPropChange(allUsers);
     });
   }
 
-  handleLoginChange(login: string | null) {
+  handleAllUsersPropChange(allUsers: RegisteredUser[] | null) {
+    this.messengerPage.messenger.messengerUsers.usersList.configure(allUsers);
+  }
+
+  handleLoginPropChange(login: string | null) {
     if (login === null) {
       this.loginPage.redraw();
     } else {
