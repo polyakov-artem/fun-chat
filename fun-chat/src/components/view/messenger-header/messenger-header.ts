@@ -21,7 +21,6 @@ export class MessengerHeader extends Div {
     super(props);
     this.configure();
     this.addListeners();
-    this.addModelListeners();
   }
 
   configure() {
@@ -63,13 +62,7 @@ export class MessengerHeader extends Div {
     });
   }
 
-  addModelListeners() {
-    appModel.login.subscribe((login) => {
-      if (login === null) {
-        this.userLogin.setTextContent(`User: `);
-      } else {
-        this.userLogin.setTextContent(`User: ${login}`);
-      }
-    });
+  updateUserLogin(login: string): void {
+    this.userLogin.setTextContent(`User: ${login}`);
   }
 }

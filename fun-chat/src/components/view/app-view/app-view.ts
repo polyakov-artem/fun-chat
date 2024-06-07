@@ -35,6 +35,8 @@ export class AppView {
       this.loginPage.loginBlock.loginForm.clearForm();
       this.messengerPage.redraw();
     }
+
+    this.messengerPage.messenger.messengerHeader.updateUserLogin(login || '');
   }
 }
 export const appView = new AppView();
