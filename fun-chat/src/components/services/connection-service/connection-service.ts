@@ -11,6 +11,10 @@ import {
   ActiveUsersResponse,
   AuthData,
   ClientRequest,
+  DeleteMsgRequest,
+  DeleteMsgResponse,
+  EditMsgRequest,
+  EditMsgResponse,
   ErrorResponse,
   GetMsgRequest,
   GetMsgResponse,
@@ -20,6 +24,10 @@ import {
   LoginResponse,
   LogoutRequest,
   LogoutResponse,
+  ReadMsgRequest,
+  ReadMsgResponse,
+  SendMsgRequest,
+  SendMsgResponse,
   ServerNormalResponse,
   ServerNotice,
   ServerResponse,
@@ -160,7 +168,7 @@ export class ConnectionService {
     return this.sendRequest<LogoutResponse>(request);
   }
 
-  clearTasks() {
+  clearTasks(): void {
     const previousTasksMap = new Map(this.tasksMap);
     this.tasksMap.clear();
 
@@ -207,6 +215,64 @@ export class ConnectionService {
     };
 
     return this.sendRequest<GetMsgResponse>(request);
+  }
+
+  sendText(to: string, text: string): Promise<ServerResponse<SendMsgResponse>> {
+    const request: SendMsgRequest = {
+      id: this.requestId,
+      type: EventType.msgSend,
+      payload: {
+        message: {
+          to,
+          text,
+        },
+      },
+    };
+
+    return this.sendRequest<SendMsgResponse>(request);
+  }
+
+  setStatusRead(id: string): Promise<ServerResponse<ReadMsgResponse>> {
+    const request: ReadMsgRequest = {
+      id: this.requestId,
+      type: EventType.msgRead,
+      payload: {
+        message: {
+          id,
+        },
+      },
+    };
+
+    return this.sendRequest<ReadMsgResponse>(request);
+  }
+
+  deleteMessage(id: string): Promise<ServerResponse<DeleteMsgResponse>> {
+    const request: DeleteMsgRequest = {
+      id: this.requestId,
+      type: EventType.msgDelete,
+      payload: {
+        message: {
+          id,
+        },
+      },
+    };
+
+    return this.sendRequest<DeleteMsgResponse>(request);
+  }
+
+  changeText(id: string, text: string): Promise<ServerResponse<EditMsgResponse>> {
+    const request: EditMsgRequest = {
+      id: this.requestId,
+      type: EventType.msgEdit,
+      payload: {
+        message: {
+          id,
+          text,
+        },
+      },
+    };
+
+    return this.sendRequest<EditMsgResponse>(request);
   }
 
   sendRequest<T extends ServerNormalResponse>(request: ClientRequest): Promise<ServerResponse<T>> {
