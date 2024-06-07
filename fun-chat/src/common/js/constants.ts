@@ -144,3 +144,9 @@ export const webServiceMessages = {
   taskAborted: 'Connection service operation aborted',
   noConnection: 'No active connection',
 };
+
+export const attributes = {
+  usersItem: {
+    login: 'login',
+  },
+};

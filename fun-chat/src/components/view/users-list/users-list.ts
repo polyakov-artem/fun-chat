@@ -1,5 +1,5 @@
 import { classes } from '../../../common/js/constants';
-import { ChildComponentProps, RegisteredUser } from '../../../types/types';
+import { ChildComponentProps, UpdateUsersListOptions } from '../../../types/types';
 import { List } from '../list/list';
 import { UsersItem } from '../users-item/users-item';
 
@@ -10,12 +10,22 @@ export class UsersList extends List {
     super(props);
   }
 
-  configure(users: RegisteredUser[] | null) {
+  updateUsersList(options: UpdateUsersListOptions) {
     this.removeComponents();
-    if (users === null) return;
 
-    users.forEach((user) => {
-      const item = new UsersItem({ text: user.login, isLogined: user.isLogined });
+    if (options.users === null) return;
+
+    options.users.forEach((user) => {
+      const isHidden = !user.login.includes(options.filterText);
+      const isSelected = user.login === options.selectedUser?.login;
+
+      const item = new UsersItem({
+        isHidden,
+        isSelected,
+        text: user.login,
+        isLogined: user.isLogined,
+      });
+
       this.appendComponents(item);
     });
   }

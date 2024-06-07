@@ -7,6 +7,7 @@ import { ButtonPrimary } from '../button-primary/button-primary';
 import { InputField } from '../input-field/input-field';
 import { Input } from '../input/input';
 import { authController } from '../../controller/auth-controller/auth-controller';
+import { appModel } from '../../model/app-model/app-model';
 
 export class LoginForm extends Form {
   loginField!: InputField;
@@ -32,6 +33,7 @@ export class LoginForm extends Form {
 
     this.configure();
     this.addListeners();
+    this.addModelListeners();
   }
 
   configure(): void {
@@ -89,6 +91,14 @@ export class LoginForm extends Form {
       });
 
       return false;
+    });
+  }
+
+  addModelListeners() {
+    appModel.login.subscribe((login: string | null) => {
+      if (login !== null) {
+        this.clearForm();
+      }
     });
   }
 

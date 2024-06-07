@@ -10,11 +10,14 @@ export class AppModel {
 
   allUsers: Observable<RegisteredUser[] | null>;
 
+  selectedUser: Observable<RegisteredUser | null>;
+
   constructor() {
     this.login = new Observable<null | string>(null);
     this.password = new Observable<null | string>(null);
     this.isConnected = new Observable<boolean>(false);
     this.allUsers = new Observable<RegisteredUser[] | null>(null);
+    this.selectedUser = new Observable<null | RegisteredUser>(null);
   }
 }
 

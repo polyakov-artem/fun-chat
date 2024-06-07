@@ -41,7 +41,6 @@ export class AppController {
   addModelListeners() {
     this.addIsConnectedPropListeners();
     this.addLoginPropListeners();
-    this.addConnectionChangeListeners();
   }
 
   addIsConnectedPropListeners() {

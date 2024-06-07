@@ -37,6 +37,14 @@ export class MessengerController {
 
     appModel.allUsers.setValue([...activeUsers, ...inActiveUsers]);
   }
+
+  setSelectedUser(login: string | null) {
+    const selectedUser: RegisteredUser | undefined = appModel.allUsers
+      .getValue()
+      ?.find((user) => user.login === login);
+
+    appModel.selectedUser.setValue(selectedUser || null);
+  }
 }
 
 export const messengerController = new MessengerController();

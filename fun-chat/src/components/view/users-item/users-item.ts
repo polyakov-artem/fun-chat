@@ -1,9 +1,9 @@
-import { classes } from '../../../common/js/constants';
+import { attributes, classes } from '../../../common/js/constants';
 import { LiItem } from '../li-item/li-item';
 import { UsersItemProps } from '../../../types/types';
 
 export class UsersItem extends LiItem {
-  constructor(props: UsersItemProps = { isLogined: false }) {
+  constructor(props: UsersItemProps = {}) {
     props.classNames ??= [];
     props.classNames.push(classes.usersItem);
     super(props);
@@ -12,5 +12,9 @@ export class UsersItem extends LiItem {
 
   configure(props: UsersItemProps) {
     props.isLogined && this.addClass(classes.usersItemActive);
+    props.isSelected && this.addClass(classes.usersItemSelected);
+    props.isHidden && this.addClass(classes.usersItemHidden);
+
+    this.setAttribute(attributes.usersItem.login, props.text || '');
   }
 }

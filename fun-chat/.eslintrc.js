@@ -36,5 +36,6 @@ module.exports = {
     'no-unused-vars': 'off',
     'no-param-reassign': 'off',
     'import/no-cycle': 'off',
+    '@typescript-eslint/no-loop-func': 'off',
   },
 };
