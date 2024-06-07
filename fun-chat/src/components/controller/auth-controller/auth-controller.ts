@@ -7,7 +7,7 @@ import {
   PASSWORD_MIN_LENGTH,
 } from '../../../common/js/constants';
 
-import { AuthData } from '../../../types/types';
+import { AuthData, LoginResponse, ServerResponse } from '../../../types/types';
 import { appModel } from '../../model/app-model/app-model';
 import { connectionService } from '../../services/connection-service/connection-service';
 import { storageService } from '../../services/storage-service/storage-service';
@@ -25,15 +25,15 @@ export class AuthController {
   }
 
   autoLogin(): void {
-    const authData = storageService.getData<AuthData>(AUTH_DATA_KEY);
+    const authData: AuthData | null = storageService.getData<AuthData>(AUTH_DATA_KEY);
 
     if (!authData || !authData.login || !authData.password) {
       this.removeStorageAuthData();
       return;
     }
 
-    const loginError = this.validateInput(authData.login, LOGIN_MIN_LENGTH);
-    const passwordError = this.validateInput(authData.password, PASSWORD_MIN_LENGTH);
+    const loginError: string = this.validateInput(authData.login, LOGIN_MIN_LENGTH);
+    const passwordError: string = this.validateInput(authData.password, PASSWORD_MIN_LENGTH);
 
     if (loginError || passwordError) {
       this.removeStorageAuthData();
@@ -44,7 +44,7 @@ export class AuthController {
   }
 
   async login(authData: AuthData): Promise<void> {
-    const response = await connectionService.login(authData);
+    const response: ServerResponse<LoginResponse> = await connectionService.login(authData);
 
     if (response.type === EventType.error) {
       return;
@@ -56,8 +56,8 @@ export class AuthController {
   }
 
   logout(): void {
-    const login = appModel.login.getValue();
-    const password = appModel.password.getValue();
+    const login: string | null = appModel.login.getValue();
+    const password: string | null = appModel.password.getValue();
 
     this.removeAppAuthData();
     this.removeStorageAuthData();
@@ -74,7 +74,7 @@ export class AuthController {
     storageService.removeData(AUTH_DATA_KEY);
   }
 
-  removeAppAuthData() {
+  removeAppAuthData(): void {
     appModel.login.setValue(null);
     appModel.password.setValue(null);
   }
