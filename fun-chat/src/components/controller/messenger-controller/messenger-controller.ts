@@ -1,14 +1,45 @@
 import { EventType } from '../../../common/js/constants';
 import {
   ActiveUsersResponse,
+  AllUsersHistory,
+  GetMsgResponse,
   InActiveUsersResponse,
   RegisteredUser,
   ServerResponse,
+  UserHistory,
 } from '../../../types/types';
 import { appModel } from '../../model/app-model/app-model';
 import { connectionService } from '../../services/connection-service/connection-service';
 
 export class MessengerController {
+  //
+
+  async updateAllUsersHistory(): Promise<void> {
+    const allUsers: RegisteredUser[] | null = appModel.allUsers.getValue();
+
+    if (!allUsers) {
+      appModel.allUsersHistory.setValue(null);
+      return;
+    }
+
+    const allUsersHistoryPromises: Promise<UserHistory>[] = allUsers.map((user) =>
+      this.getMessagesWithUser(user.login),
+    );
+
+    const allUsersHistory: AllUsersHistory = await Promise.all(allUsersHistoryPromises);
+    appModel.allUsersHistory.setValue(allUsersHistory);
+  }
+
+  async getMessagesWithUser(login: string): Promise<UserHistory> {
+    const response: ServerResponse<GetMsgResponse> = await connectionService.getMessagesFrom(login);
+
+    if (response.type === EventType.error) {
+      return { login, messages: [] };
+    }
+
+    return { login, messages: response.payload.messages };
+  }
+
   async updateAllUsers(): Promise<void> {
     const currentLogin: string | null = appModel.login.getValue();
 

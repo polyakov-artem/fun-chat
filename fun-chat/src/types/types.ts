@@ -235,3 +235,10 @@ export type UpdateUsersListOptions = {
   filterText: string;
   selectedUser: RegisteredUser | null;
 };
+
+export type AllUsersHistory = UserHistory[];
+
+export type UserHistory = {
+  login: string;
+  messages: Message[];
+};

@@ -12,6 +12,8 @@ import {
   AuthData,
   ClientRequest,
   ErrorResponse,
+  GetMsgRequest,
+  GetMsgResponse,
   InActiveUsersResponse,
   InactiveUsersRequest,
   LoginRequest,
@@ -191,6 +193,20 @@ export class ConnectionService {
     };
 
     return this.sendRequest<InActiveUsersResponse>(request);
+  }
+
+  getMessagesFrom(login: string): Promise<ServerResponse<GetMsgResponse>> {
+    const request: GetMsgRequest = {
+      id: this.requestId,
+      type: EventType.msgFromUser,
+      payload: {
+        user: {
+          login,
+        },
+      },
+    };
+
+    return this.sendRequest<GetMsgResponse>(request);
   }
 
   sendRequest<T extends ServerNormalResponse>(request: ClientRequest): Promise<ServerResponse<T>> {
