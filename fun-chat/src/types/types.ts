@@ -225,13 +225,15 @@ export type Task<T extends ServerResponse> = {
 export type WebSocketCb = SingleValueVoidFn<Event>;
 
 export type UsersItemProps = ChildComponentProps & {
-  isLogined?: boolean;
-  isHidden?: boolean;
-  isSelected?: boolean;
+  isLogined: boolean;
+  isHidden: boolean;
+  isSelected: boolean;
+  numOfUnread: number;
 };
 
 export type UpdateUsersListOptions = {
   users: RegisteredUser[] | null;
+  allUsersHistory: AllUsersHistory | null;
   filterText: string;
   selectedUser: RegisteredUser | null;
 };
