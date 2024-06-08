@@ -42,6 +42,7 @@ export class AppController {
     this.addIsConnectedPropListeners();
     this.addLoginPropListeners();
     this.addAllUsersPropListeners();
+    this.addSelectedUserPropListeners();
   }
 
   addIsConnectedPropListeners() {
@@ -64,6 +65,12 @@ export class AppController {
   addAllUsersPropListeners() {
     appModel.allUsers.subscribe(() => {
       this.messengerController.updateAllUsersHistory();
+    });
+  }
+
+  addSelectedUserPropListeners() {
+    appModel.selectedUser.subscribe(() => {
+      this.messengerController.updateCurrentMessages();
     });
   }
 }

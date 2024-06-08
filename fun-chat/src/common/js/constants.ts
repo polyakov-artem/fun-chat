@@ -149,4 +149,16 @@ export const attributes = {
   usersItem: {
     login: 'login',
   },
+  messageItem: {
+    id: 'id',
+  },
+};
+
+export const MESSAGE_USER_ALIAS = 'Me';
+
+export const messageStatuses = {
+  delivered: 'Delivered',
+  read: 'Has been read',
+  sended: 'Sended',
+  edited: 'Edited',
 };

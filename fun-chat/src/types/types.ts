@@ -251,3 +251,18 @@ export type UserHistory = {
   login: string;
   messages: Message[];
 };
+
+export type MessageItemProps = ChildComponentProps & {
+  message: Message;
+};
+
+export type MessageFooterProps = ChildComponentProps & {
+  editedString: string;
+  statusString: string;
+};
+
+export type MessageHeaderProps = ChildComponentProps & {
+  senderString: string;
+  dateString: string;
+  isOutcome: boolean;
+};

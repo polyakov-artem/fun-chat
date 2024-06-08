@@ -1,4 +1,4 @@
-import { AllUsersHistory, RegisteredUser } from '../../../types/types';
+import { AllUsersHistory, Message, RegisteredUser } from '../../../types/types';
 import { Observable } from '../observable/observable';
 
 export class AppModel {
@@ -14,6 +14,8 @@ export class AppModel {
 
   allUsersHistory: Observable<AllUsersHistory | null>;
 
+  currentMessages: Observable<Message[] | null>;
+
   constructor() {
     this.login = new Observable<null | string>(null);
     this.password = new Observable<null | string>(null);
@@ -21,6 +23,7 @@ export class AppModel {
     this.allUsers = new Observable<RegisteredUser[] | null>(null);
     this.selectedUser = new Observable<null | RegisteredUser>(null);
     this.allUsersHistory = new Observable<AllUsersHistory | null>(null);
+    this.currentMessages = new Observable<Message[] | null>(null);
   }
 }
 

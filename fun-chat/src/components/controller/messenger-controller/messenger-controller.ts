@@ -36,6 +36,24 @@ export class MessengerController {
     appModel.allUsersHistory.setValue(allUsersHistory);
   }
 
+  updateCurrentMessages(): void {
+    const selectedUser: RegisteredUser | null = appModel.selectedUser.getValue();
+    const allUsersHistory: AllUsersHistory | null = appModel.allUsersHistory.getValue();
+
+    if (!selectedUser || !allUsersHistory) {
+      appModel.currentMessages.setValue(null);
+      return;
+    }
+
+    const history: UserHistory | undefined = allUsersHistory.find(
+      (userHistory) => userHistory.login === selectedUser.login,
+    );
+
+    history?.messages.length
+      ? appModel.currentMessages.setValue(history.messages)
+      : appModel.currentMessages.setValue(null);
+  }
+
   async getMessagesWithUser(login: string): Promise<UserHistory> {
     const response: ServerResponse<GetMsgResponse> = await connectionService.getMessagesFrom(login);
 
