@@ -4,11 +4,19 @@ import { Div } from '../div/div';
 import { ChildComponentProps, Message, RegisteredUser } from '../../../types/types';
 import { appModel } from '../../model/app-model/app-model';
 import { MessageItem } from '../message-item/message-item';
+import { MessagesDivider } from '../messages-divider/messages-divider';
+import { Component } from '../component/component';
 
 export class MessengerHistoryContent extends Div {
   selectUserPlaceholder!: Paragraph;
 
   writeMessagePlaceholder!: Paragraph;
+
+  autoScrolling: boolean = false;
+
+  dividerIsAdded: boolean = false;
+
+  messageDivider?: MessagesDivider;
 
   constructor(props: ChildComponentProps = {}) {
     props.classNames ??= [];
@@ -17,6 +25,7 @@ export class MessengerHistoryContent extends Div {
     this.configure();
 
     this.addModelListeners();
+    this.addListeners();
   }
 
   configure(): void {
@@ -43,6 +52,12 @@ export class MessengerHistoryContent extends Div {
     });
   }
 
+  addListeners() {
+    this.addEventListener('scrollend', () => {
+      this.autoScrolling = false;
+    });
+  }
+
   update(): void {
     this.removeComponents();
 
@@ -61,11 +76,38 @@ export class MessengerHistoryContent extends Div {
     }
 
     this.addMessages(messages);
+    this.scrollView();
   }
 
   addMessages(messages: Message[]): void {
+    this.dividerIsAdded = false;
+    const currentLogin = appModel.login.getValue();
+
     messages.forEach((message: Message): void => {
+      if (!this.dividerIsAdded && !message.status.isReaded && message.to === currentLogin) {
+        this.messageDivider = new MessagesDivider();
+        this.appendComponents(this.messageDivider);
+        this.dividerIsAdded = true;
+      }
+
       this.appendComponents(new MessageItem({ message }));
     });
+  }
+
+  scrollView(): void {
+    this.autoScrolling = true;
+
+    if (this.dividerIsAdded) {
+      this.messageDivider?.node.scrollIntoView();
+      return;
+    }
+
+    const childComponentsArrLength: number = this.childComponents.length;
+
+    if (!childComponentsArrLength) return;
+
+    (
+      this.childComponents[childComponentsArrLength - 1] as Component<keyof HTMLElementTagNameMap>
+    ).node.scrollIntoView();
   }
 }
