@@ -6,6 +6,7 @@ import { appModel } from '../../model/app-model/app-model';
 import { MessageItem } from '../message-item/message-item';
 import { MessagesDivider } from '../messages-divider/messages-divider';
 import { Component } from '../component/component';
+import { messengerController } from '../../controller/messenger-controller/messenger-controller';
 
 export class MessengerHistoryContent extends Div {
   selectUserPlaceholder!: Paragraph;
@@ -43,18 +44,22 @@ export class MessengerHistoryContent extends Div {
   }
 
   addModelListeners(): void {
-    appModel.currentMessages.subscribe(() => {
+    appModel.currentMessages.subscribe((): void => {
       this.update();
     });
 
-    appModel.selectedUser.subscribe(() => {
+    appModel.selectedUser.subscribe((): void => {
       this.update();
     });
   }
 
-  addListeners() {
-    this.addEventListener('scrollend', () => {
+  addListeners(): void {
+    this.addEventListener('scrollend', (): void => {
       this.autoScrolling = false;
+    });
+
+    this.addEventListener('click', (): void => {
+      this.handleClick();
     });
   }
 
@@ -109,5 +114,9 @@ export class MessengerHistoryContent extends Div {
     (
       this.childComponents[childComponentsArrLength - 1] as Component<keyof HTMLElementTagNameMap>
     ).node.scrollIntoView();
+  }
+
+  handleClick(): void {
+    messengerController.readCurrentMessages();
   }
 }

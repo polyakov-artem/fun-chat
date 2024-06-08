@@ -28,25 +28,27 @@ export class AppController {
     this.addModelListeners();
   }
 
-  addConnectionListeners() {
-    this.connectionService.addOnOpenCallback(() => {
+  addConnectionListeners(): void {
+    this.connectionService.addOnOpenCallback((): void => {
       appModel.isConnected.setValue(true);
     });
 
-    this.connectionService.addOnCloseCallback(() => {
+    this.connectionService.addOnCloseCallback((): void => {
       appModel.isConnected.setValue(false);
     });
   }
 
-  addModelListeners() {
+  addModelListeners(): void {
     this.addIsConnectedPropListeners();
     this.addLoginPropListeners();
     this.addAllUsersPropListeners();
     this.addSelectedUserPropListeners();
+    this.addCurrentMessagesPropListeners();
+    this.addAllUsersHistoryPropListeners();
   }
 
-  addIsConnectedPropListeners() {
-    appModel.isConnected.subscribe((isConnected) => {
+  addIsConnectedPropListeners(): void {
+    appModel.isConnected.subscribe((isConnected: boolean): void => {
       if (isConnected) {
         this.authController.autoLogin();
         return;
@@ -56,21 +58,33 @@ export class AppController {
     });
   }
 
-  addLoginPropListeners() {
-    appModel.login.subscribe(() => {
+  addLoginPropListeners(): void {
+    appModel.login.subscribe((): void => {
       this.messengerController.updateAllUsers();
     });
   }
 
-  addAllUsersPropListeners() {
-    appModel.allUsers.subscribe(() => {
+  addAllUsersPropListeners(): void {
+    appModel.allUsers.subscribe((): void => {
       this.messengerController.updateAllUsersHistory();
     });
   }
 
-  addSelectedUserPropListeners() {
-    appModel.selectedUser.subscribe(() => {
+  addAllUsersHistoryPropListeners(): void {
+    appModel.allUsersHistory.subscribe((): void => {
       this.messengerController.updateCurrentMessages();
+    });
+  }
+
+  addSelectedUserPropListeners(): void {
+    appModel.selectedUser.subscribe((): void => {
+      this.messengerController.updateCurrentMessages();
+    });
+  }
+
+  addCurrentMessagesPropListeners(): void {
+    appModel.currentMessages.subscribe((): void => {
+      this.messengerController.updateCurrentUnreadMessages();
     });
   }
 }

@@ -16,6 +16,8 @@ export class AppModel {
 
   currentMessages: Observable<Message[] | null>;
 
+  currentUnreadMessages: Observable<Message[] | null>;
+
   constructor() {
     this.login = new Observable<null | string>(null);
     this.password = new Observable<null | string>(null);
@@ -24,6 +26,7 @@ export class AppModel {
     this.selectedUser = new Observable<null | RegisteredUser>(null);
     this.allUsersHistory = new Observable<AllUsersHistory | null>(null);
     this.currentMessages = new Observable<Message[] | null>(null);
+    this.currentUnreadMessages = new Observable<Message[] | null>(null);
   }
 }
 

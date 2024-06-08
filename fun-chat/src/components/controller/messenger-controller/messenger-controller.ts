@@ -4,6 +4,7 @@ import {
   AllUsersHistory,
   GetMsgResponse,
   InActiveUsersResponse,
+  Message,
   RegisteredUser,
   ServerResponse,
   UserHistory,
@@ -12,12 +13,43 @@ import { appModel } from '../../model/app-model/app-model';
 import { connectionService } from '../../services/connection-service/connection-service';
 
 export class MessengerController {
-  async sendText(text: string) {
+  async sendText(text: string): Promise<void> {
     const selectedUser = appModel.selectedUser.getValue();
 
     if (!text || !selectedUser) return;
 
     await connectionService.sendText(selectedUser.login, text);
+
+    this.updateSelectedUserHistory();
+  }
+
+  async updateAllUsers(): Promise<void> {
+    const currentLogin: string | null = appModel.login.getValue();
+
+    if (!currentLogin) {
+      appModel.allUsers.setValue(null);
+      return;
+    }
+
+    const activeUsersResponse: ServerResponse<ActiveUsersResponse> =
+      await connectionService.getActiveUsers();
+
+    const inActiveUsersResponse: ServerResponse<InActiveUsersResponse> =
+      await connectionService.getInactiveUsers();
+
+    if (
+      activeUsersResponse.type === EventType.error ||
+      inActiveUsersResponse.type === EventType.error
+    ) {
+      return;
+    }
+
+    const inActiveUsers: RegisteredUser[] = inActiveUsersResponse.payload.users;
+    const activeUsers: RegisteredUser[] = activeUsersResponse.payload.users.filter(
+      (user) => user.login !== currentLogin,
+    );
+
+    appModel.allUsers.setValue([...activeUsers, ...inActiveUsers]);
   }
 
   async updateAllUsersHistory(): Promise<void> {
@@ -54,6 +86,53 @@ export class MessengerController {
       : appModel.currentMessages.setValue(null);
   }
 
+  updateCurrentUnreadMessages(): void {
+    const currentMessages: Message[] | null = appModel.currentMessages.getValue();
+
+    if (!currentMessages) {
+      appModel.currentUnreadMessages.setValue(null);
+      return;
+    }
+
+    const currentLogin: string | null = appModel.login.getValue();
+
+    const unreadMessages: Message[] = currentMessages.filter((message: Message): boolean => {
+      return message.to === currentLogin && message.status.isReaded === false;
+    });
+
+    unreadMessages.length
+      ? appModel.currentUnreadMessages.setValue(unreadMessages)
+      : appModel.currentUnreadMessages.setValue(null);
+  }
+
+  async readCurrentMessages(): Promise<void> {
+    const unreadMessages: Message[] | null = appModel.currentUnreadMessages.getValue();
+    if (!unreadMessages || !unreadMessages.length) return;
+
+    await Promise.all(
+      unreadMessages.map((message: Message) => connectionService.setStatusRead(message.id)),
+    );
+
+    this.updateSelectedUserHistory();
+  }
+
+  async updateSelectedUserHistory(): Promise<void> {
+    const selectedUser: RegisteredUser | null = appModel.selectedUser.getValue();
+    if (!selectedUser) return;
+
+    const userHistory: UserHistory = await this.getMessagesWithUser(selectedUser.login);
+
+    const allUsersHistory: AllUsersHistory | null = appModel.allUsersHistory.getValue();
+    if (!allUsersHistory) return;
+
+    const updatedUsersHistory = allUsersHistory.map((history) => {
+      if (history.login === userHistory.login) return userHistory;
+      return history;
+    });
+
+    appModel.allUsersHistory.setValue(updatedUsersHistory);
+  }
+
   async getMessagesWithUser(login: string): Promise<UserHistory> {
     const response: ServerResponse<GetMsgResponse> = await connectionService.getMessagesFrom(login);
 
@@ -62,35 +141,6 @@ export class MessengerController {
     }
 
     return { login, messages: response.payload.messages };
-  }
-
-  async updateAllUsers(): Promise<void> {
-    const currentLogin: string | null = appModel.login.getValue();
-
-    if (!currentLogin) {
-      appModel.allUsers.setValue(null);
-      return;
-    }
-
-    const activeUsersResponse: ServerResponse<ActiveUsersResponse> =
-      await connectionService.getActiveUsers();
-
-    const inActiveUsersResponse: ServerResponse<InActiveUsersResponse> =
-      await connectionService.getInactiveUsers();
-
-    if (
-      activeUsersResponse.type === EventType.error ||
-      inActiveUsersResponse.type === EventType.error
-    ) {
-      return;
-    }
-
-    const inActiveUsers: RegisteredUser[] = inActiveUsersResponse.payload.users;
-    const activeUsers: RegisteredUser[] = activeUsersResponse.payload.users.filter(
-      (user) => user.login !== currentLogin,
-    );
-
-    appModel.allUsers.setValue([...activeUsers, ...inActiveUsers]);
   }
 
   setSelectedUser(login: string | null) {
