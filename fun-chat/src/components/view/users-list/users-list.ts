@@ -26,7 +26,7 @@ export class UsersList extends List {
 
       if (userHistory) {
         numOfUnread = userHistory.messages.reduce((total: number, message: Message) => {
-          if (message.from === user.login || message.status.isReaded) return total;
+          if (message.to === user.login || message.status.isReaded) return total;
           return total + 1;
         }, 0);
       }

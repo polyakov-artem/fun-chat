@@ -1,5 +1,5 @@
 import { classes } from '../../../common/js/constants';
-import { ChildComponentProps, RegisteredUser } from '../../../types/types';
+import { AllUsersHistory, ChildComponentProps, RegisteredUser } from '../../../types/types';
 import { appModel } from '../../model/app-model/app-model';
 import { Div } from '../div/div';
 import { Input } from '../input/input';
@@ -39,16 +39,17 @@ export class MessengerUsers extends Div {
       this.updateUsersList();
     });
 
-    appModel.allUsers.subscribe(() => {
+    appModel.allUsersHistory.subscribe(() => {
       this.updateUsersList();
     });
   }
 
   updateUsersList(): void {
     const users: RegisteredUser[] | null = appModel.allUsers.getValue();
+    const allUsersHistory: AllUsersHistory | null = appModel.allUsersHistory.getValue();
     const filterText: string = this.searchField.node.value;
     const selectedUser: RegisteredUser | null = appModel.selectedUser.getValue();
 
-    this.usersList.updateUsersList({ users, filterText, selectedUser });
+    this.usersList.updateUsersList({ users, allUsersHistory, filterText, selectedUser });
   }
 }
