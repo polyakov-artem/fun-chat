@@ -12,7 +12,13 @@ import { appModel } from '../../model/app-model/app-model';
 import { connectionService } from '../../services/connection-service/connection-service';
 
 export class MessengerController {
-  //
+  async sendText(text: string) {
+    const selectedUser = appModel.selectedUser.getValue();
+
+    if (!text || !selectedUser) return;
+
+    await connectionService.sendText(selectedUser.login, text);
+  }
 
   async updateAllUsersHistory(): Promise<void> {
     const allUsers: RegisteredUser[] | null = appModel.allUsers.getValue();
