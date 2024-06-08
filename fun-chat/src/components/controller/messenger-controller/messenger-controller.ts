@@ -20,7 +20,13 @@ export class MessengerController {
 
     await connectionService.sendText(selectedUser.login, text);
 
-    this.updateSelectedUserHistory();
+    const unreadMessages: Message[] | null = appModel.currentUnreadMessages.getValue();
+
+    if (unreadMessages) {
+      this.readCurrentMessages();
+    } else {
+      this.updateSelectedUserHistory(selectedUser.login);
+    }
   }
 
   async updateAllUsers(): Promise<void> {
@@ -107,20 +113,19 @@ export class MessengerController {
 
   async readCurrentMessages(): Promise<void> {
     const unreadMessages: Message[] | null = appModel.currentUnreadMessages.getValue();
-    if (!unreadMessages || !unreadMessages.length) return;
+    const selectedUser: RegisteredUser | null = appModel.selectedUser.getValue();
+
+    if (!unreadMessages || !unreadMessages.length || !selectedUser) return;
 
     await Promise.all(
       unreadMessages.map((message: Message) => connectionService.setStatusRead(message.id)),
     );
 
-    this.updateSelectedUserHistory();
+    this.updateSelectedUserHistory(selectedUser.login);
   }
 
-  async updateSelectedUserHistory(): Promise<void> {
-    const selectedUser: RegisteredUser | null = appModel.selectedUser.getValue();
-    if (!selectedUser) return;
-
-    const userHistory: UserHistory = await this.getMessagesWithUser(selectedUser.login);
+  async updateSelectedUserHistory(login: string): Promise<void> {
+    const userHistory: UserHistory = await this.getMessagesWithUser(login);
 
     const allUsersHistory: AllUsersHistory | null = appModel.allUsersHistory.getValue();
     if (!allUsersHistory) return;
