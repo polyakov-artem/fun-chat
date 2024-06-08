@@ -55,11 +55,11 @@ export type SendMsgExchange<IdType extends string | null, Payload> = BaseExchang
   Payload
 >;
 
-export type SendMsgRequest = SendMsgExchange<string, MsgIdTextPayload>;
+export type SendMsgRequest = SendMsgExchange<string, SendMsgRequestPayload>;
 
-export type MsgIdTextPayload = {
+export type SendMsgRequestPayload = {
   message: {
-    id: string;
+    to: string;
     text: string;
   };
 };
@@ -156,7 +156,14 @@ export type EditMsgExchange<IdType extends string | null, Payload> = BaseExchang
   Payload
 >;
 
-export type EditMsgRequest = EditMsgExchange<string, MsgIdTextPayload>;
+export type EditMsgRequest = EditMsgExchange<string, MsgEditRequestPayload>;
+
+export type MsgEditRequestPayload = {
+  message: {
+    id: string;
+    text: string;
+  };
+};
 
 export type EditMsgResponse = EditMsgExchange<string, EditMsgResponsePayload>;
 export type EditMsgResponsePayload = ChangedMsgPayload<Pick<MsgStatus, 'isEdited'>>;
