@@ -61,6 +61,10 @@ export class MessengerHistoryContent extends Div {
     this.addEventListener('click', (): void => {
       this.handleClick();
     });
+
+    this.addEventListener('scroll', () => {
+      this.handleScroll();
+    });
   }
 
   update(): void {
@@ -118,5 +122,11 @@ export class MessengerHistoryContent extends Div {
 
   handleClick(): void {
     messengerController.readCurrentMessages();
+  }
+
+  handleScroll() {
+    if (!this.autoScrolling) {
+      messengerController.readCurrentMessages();
+    }
   }
 }
