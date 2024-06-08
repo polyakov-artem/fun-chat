@@ -46,14 +46,6 @@ export class Component<Tag extends DocTag> {
     return this.node.textContent;
   }
 
-  setValue(value: string | number): void {
-    this.node.setAttribute('value', `${value}`);
-  }
-
-  getValue(): string | null {
-    return this.node.getAttribute('value');
-  }
-
   disable(): void {
     this.setAttribute('disabled', 'true');
   }
