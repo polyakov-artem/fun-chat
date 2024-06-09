@@ -124,13 +124,22 @@ export class MessengerHistoryContent extends Div {
     messengerController.readCurrentMessages();
     if (!e.target) return;
 
-    const messageItemNode = (e.target as HTMLElement).closest(classSelectors.message) as
-      | MessageItem['node']
-      | null;
+    const messageItemNode = (e.target as HTMLElement).closest<MessageItem['node']>(
+      classSelectors.message,
+    );
 
     if (!messageItemNode) return;
 
     const { id, text, receiver } = messageItemNode.component as MessageItem;
+
+    const deleteBtn = (e.target as HTMLElement).closest<HTMLButtonElement>(
+      classSelectors.messageDeleteBtn,
+    );
+
+    if (deleteBtn) {
+      messengerController.deleteMessage(id, receiver);
+      return;
+    }
 
     const editBtn = (e.target as HTMLElement).closest<HTMLButtonElement>(
       classSelectors.messageEditBtn,

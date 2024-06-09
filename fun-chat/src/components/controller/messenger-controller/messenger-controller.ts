@@ -175,6 +175,14 @@ export class MessengerController {
       ? appModel.editableMessage.setValue(message)
       : appModel.editableMessage.setValue(null);
   }
+
+  async deleteMessage(id: string, receiver: string) {
+    if (!id || !receiver) return;
+
+    this.setEditableMessage(null);
+    await connectionService.deleteMessage(id);
+    this.updateSelectedUserHistory(receiver);
+  }
 }
 
 export const messengerController = new MessengerController();
