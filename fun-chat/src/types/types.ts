@@ -266,3 +266,5 @@ export type MessageHeaderProps = ChildComponentProps & {
   dateString: string;
   isOutcome: boolean;
 };
+
+export type EditableMessage = { id: string; text: string; receiver: string } | null;

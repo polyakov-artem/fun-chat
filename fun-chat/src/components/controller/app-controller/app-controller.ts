@@ -80,6 +80,7 @@ export class AppController {
   addSelectedUserPropListeners(): void {
     appModel.selectedUser.subscribe((): void => {
       this.messengerController.updateCurrentMessages();
+      this.messengerController.setEditableMessage(null);
     });
   }
 

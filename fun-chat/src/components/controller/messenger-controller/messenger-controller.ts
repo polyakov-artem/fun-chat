@@ -2,6 +2,7 @@ import { EventType } from '../../../common/js/constants';
 import {
   ActiveUsersResponse,
   AllUsersHistory,
+  EditableMessage,
   GetMsgResponse,
   InActiveUsersResponse,
   Message,
@@ -148,7 +149,7 @@ export class MessengerController {
     return { login, messages: response.payload.messages };
   }
 
-  setSelectedUser(login: string | null) {
+  setSelectedUser(login: string | null): void {
     if (login === null) {
       appModel.selectedUser.setValue(null);
       return;
@@ -159,6 +160,20 @@ export class MessengerController {
       ?.find((user) => user.login === login);
 
     appModel.selectedUser.setValue(selectedUser || null);
+  }
+
+  async changeMsgText(id: string, text: string, receiver: string) {
+    if (!id || !text || !receiver) return;
+
+    this.setEditableMessage(null);
+    await connectionService.changeText(id, text);
+    this.updateSelectedUserHistory(receiver);
+  }
+
+  setEditableMessage(message: EditableMessage) {
+    typeof message?.id === 'string' && typeof message?.text === 'string'
+      ? appModel.editableMessage.setValue(message)
+      : appModel.editableMessage.setValue(null);
   }
 }
 

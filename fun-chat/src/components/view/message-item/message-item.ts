@@ -14,6 +14,12 @@ import { Div } from '../div/div';
 export class MessageItem extends Component<'article'> {
   messageContent!: Div;
 
+  id!: string;
+
+  text!: string;
+
+  receiver!: string;
+
   constructor(props: MessageItemProps) {
     props.classNames ??= [];
     props.classNames.push(classes.message);
@@ -22,10 +28,11 @@ export class MessageItem extends Component<'article'> {
   }
 
   configure(props: MessageItemProps) {
-    const { datetime, from, id, status, text }: Message = props.message;
+    const { datetime, from, to, id, status, text }: Message = props.message;
     const { isDelivered, isReaded, isEdited }: MsgStatus = status;
-
-    this.setAttribute(attributes.messageItem.id, id);
+    this.id = id;
+    this.text = text;
+    this.receiver = to;
     const isOutcome: boolean = appModel.login.getValue() === from;
     const senderString: string = isOutcome ? MESSAGE_USER_ALIAS : from;
     const dateString: string = `${new Date(datetime).toLocaleDateString()}, ${new Date(datetime).toLocaleTimeString()}`;

@@ -2,7 +2,7 @@ import { classes } from '../../../common/js/constants';
 import { Form } from '../form/form';
 import { ButtonPrimary } from '../button-primary/button-primary';
 import { Input } from '../input/input';
-import { ChildComponentProps, RegisteredUser } from '../../../types/types';
+import { ChildComponentProps, EditableMessage, RegisteredUser } from '../../../types/types';
 import { appModel } from '../../model/app-model/app-model';
 import { messengerController } from '../../controller/messenger-controller/messenger-controller';
 
@@ -30,15 +30,25 @@ export class MessengerSendingForm extends Form {
     appModel.selectedUser.subscribe((selectedUser: RegisteredUser | null): void => {
       this.update(selectedUser);
     });
+
+    appModel.editableMessage.subscribe((message: EditableMessage | null): void => {
+      if (message) this.input.node.value = message.text;
+    });
   }
 
   addEventListeners(): void {
     this.addEventListener('submit', (e): boolean => {
       e.preventDefault();
-      console.log('preventDefault');
 
       const text = this.input.node.value;
-      messengerController.sendText(text);
+      const editableMessage = appModel.editableMessage.getValue();
+
+      if (editableMessage) {
+        const { id, receiver } = editableMessage;
+        messengerController.changeMsgText(id, text, receiver);
+      } else {
+        messengerController.sendText(text);
+      }
 
       this.input.node.value = '';
       return false;

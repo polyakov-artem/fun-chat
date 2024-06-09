@@ -1,4 +1,4 @@
-import { classes, historyPlaceholders } from '../../../common/js/constants';
+import { classSelectors, classes, historyPlaceholders } from '../../../common/js/constants';
 import { Paragraph } from '../paragraph/paragraph';
 import { Div } from '../div/div';
 import { ChildComponentProps, Message, RegisteredUser } from '../../../types/types';
@@ -58,11 +58,11 @@ export class MessengerHistoryContent extends Div {
       this.autoScrolling = false;
     });
 
-    this.addEventListener('click', (): void => {
-      this.handleClick();
+    this.addEventListener('click', (e: Event): void => {
+      this.handleClick(e);
     });
 
-    this.addEventListener('scroll', () => {
+    this.addEventListener('scroll', (): void => {
       this.handleScroll();
     });
   }
@@ -120,8 +120,25 @@ export class MessengerHistoryContent extends Div {
     ).node.scrollIntoView();
   }
 
-  handleClick(): void {
+  handleClick(e: Event): void {
     messengerController.readCurrentMessages();
+    if (!e.target) return;
+
+    const messageItemNode = (e.target as HTMLElement).closest(classSelectors.message) as
+      | MessageItem['node']
+      | null;
+
+    if (!messageItemNode) return;
+
+    const { id, text, receiver } = messageItemNode.component as MessageItem;
+
+    const editBtn = (e.target as HTMLElement).closest<HTMLButtonElement>(
+      classSelectors.messageEditBtn,
+    );
+
+    if (editBtn) {
+      messengerController.setEditableMessage({ id, text, receiver });
+    }
   }
 
   handleScroll() {
