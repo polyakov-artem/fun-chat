@@ -269,3 +269,11 @@ export type MessageHeaderProps = ChildComponentProps & {
 };
 
 export type EditableMessage = { id: string; text: string; receiver: string } | null;
+
+export type ModalBlockProps = ChildComponentProps & {
+  message?: {
+    title?: string;
+    text?: string;
+    closeable?: boolean;
+  };
+};

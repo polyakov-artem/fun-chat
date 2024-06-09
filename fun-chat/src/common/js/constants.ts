@@ -162,3 +162,11 @@ export const messageStatuses = {
   sended: 'Sended',
   edited: 'Edited',
 };
+
+export const RECONNECTION_ERROR_TEXT = 'Trying to reconnect...';
+
+export const errorsNames = {
+  commonError: 'Error',
+  connectionError: 'Connection error',
+  authorizationError: 'Authorization error',
+};

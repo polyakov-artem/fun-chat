@@ -2,6 +2,7 @@ import { LoginPage, loginPage } from '../login-page/login-page';
 import { MessengerPage, messengerPage } from '../messenger-page/messenger-page';
 import { InfoPage, infoPage } from '../info-page/info-page';
 import { appModel } from '../../model/app-model/app-model';
+import { ReconnectionModalBlock } from '../reconnection-modal-block/reconnection-modal-block';
 
 export class AppView {
   loginPage: LoginPage;
@@ -9,6 +10,8 @@ export class AppView {
   infoPage: InfoPage;
 
   messengerPage: MessengerPage;
+
+  reconnectionModalBlock!: ReconnectionModalBlock;
 
   constructor() {
     this.loginPage = loginPage;
@@ -20,6 +23,8 @@ export class AppView {
 
   configure() {
     this.loginPage.redraw();
+    this.reconnectionModalBlock = new ReconnectionModalBlock();
+    if (!appModel.isConnected.getValue()) this.reconnectionModalBlock.open();
   }
 
   addModelListeners() {
@@ -30,6 +35,15 @@ export class AppView {
         this.loginPage.loginBlock.loginForm.clearForm();
         this.messengerPage.redraw();
       }
+    });
+
+    appModel.isConnected.subscribe((isConnected: boolean): void => {
+      if (isConnected) {
+        this.reconnectionModalBlock.close();
+        return;
+      }
+
+      this.reconnectionModalBlock.open();
     });
   }
 }
