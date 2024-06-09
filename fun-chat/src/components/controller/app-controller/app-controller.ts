@@ -59,8 +59,9 @@ export class AppController {
   }
 
   addLoginPropListeners(): void {
-    appModel.login.subscribe((): void => {
+    appModel.login.subscribe((login: string | null): void => {
       this.messengerController.updateAllUsers();
+      !login && this.messengerController.setSelectedUser(null);
     });
   }
 

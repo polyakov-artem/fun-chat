@@ -149,6 +149,11 @@ export class MessengerController {
   }
 
   setSelectedUser(login: string | null) {
+    if (login === null) {
+      appModel.selectedUser.setValue(null);
+      return;
+    }
+
     const selectedUser: RegisteredUser | undefined = appModel.allUsers
       .getValue()
       ?.find((user) => user.login === login);
