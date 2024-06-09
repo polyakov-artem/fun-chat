@@ -1,3 +1,5 @@
+import { EventType } from '../../../common/js/constants';
+import { ServerNotice } from '../../../types/types';
 import { appModel } from '../../model/app-model/app-model';
 import {
   ConnectionService,
@@ -35,6 +37,24 @@ export class AppController {
 
     this.connectionService.addOnCloseCallback((): void => {
       appModel.isConnected.setValue(false);
+    });
+
+    this.connectionService.addNoticesHandler((data: ServerNotice): void => {
+      switch (data.type) {
+        case EventType.userExternalLogin:
+        case EventType.userExternalLogout:
+          this.messengerController.updateAllUsers();
+          break;
+        case EventType.msgSend:
+        case EventType.msgDeliver:
+        case EventType.msgDelete:
+        case EventType.msgEdit:
+        case EventType.msgRead:
+          this.messengerController.updateAllUsersHistory();
+          break;
+        default:
+          break;
+      }
     });
   }
 

@@ -198,7 +198,8 @@ export type ServerNotice =
   | SendMsgRecipientNotice
   | DeliveredMsgNotice
   | DeleteMsgNotice
-  | EditMsgNotice;
+  | EditMsgNotice
+  | ReadMsgNotice;
 
 export type ServerResponse<T extends ServerNormalResponse = ServerNormalResponse> =
   | T
