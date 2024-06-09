@@ -31,6 +31,7 @@ import {
   ServerNormalResponse,
   ServerNotice,
   ServerResponse,
+  SingleValueVoidFn,
   Task,
   WebSocketCb,
 } from '../../../types/types';
@@ -49,6 +50,8 @@ export class ConnectionService {
   closeCb?: WebSocketCb;
 
   errorCb?: WebSocketCb;
+
+  noticesHandler?: SingleValueVoidFn<ServerNotice>;
 
   constructor() {
     this.webSocket = null;
@@ -141,7 +144,13 @@ export class ConnectionService {
     this.tasksMap.delete(response.id);
   }
 
-  handleNotice(notice: ServerNotice): void {}
+  handleNotice(notice: ServerNotice): void {
+    this.noticesHandler?.(notice);
+  }
+
+  addNoticesHandler(handler: SingleValueVoidFn<ServerNotice>) {
+    this.noticesHandler = handler;
+  }
 
   login(authData: AuthData): Promise<ServerResponse<LoginResponse>> {
     const request: LoginRequest = {
