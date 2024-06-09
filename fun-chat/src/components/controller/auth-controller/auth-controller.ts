@@ -5,12 +5,14 @@ import {
   INVALID_LETTER_TEXT,
   LOGIN_MIN_LENGTH,
   PASSWORD_MIN_LENGTH,
+  errorsNames,
 } from '../../../common/js/constants';
 
-import { AuthData, LoginResponse, ServerResponse } from '../../../types/types';
+import { AuthData, LoginResponse, LogoutResponse, ServerResponse } from '../../../types/types';
 import { appModel } from '../../model/app-model/app-model';
 import { connectionService } from '../../services/connection-service/connection-service';
 import { storageService } from '../../services/storage-service/storage-service';
+import { ErrorModalBlock } from '../../view/error-modal-block/error-modal-block';
 
 export class AuthController {
   validateInput(value: string, minLength: number = 3): string {
@@ -47,6 +49,11 @@ export class AuthController {
     const response: ServerResponse<LoginResponse> = await connectionService.login(authData);
 
     if (response.type === EventType.error) {
+      const modalWindow = new ErrorModalBlock({
+        message: { title: errorsNames.authorizationError, text: response.payload.error },
+      });
+
+      modalWindow.open();
       return;
     }
 
@@ -55,19 +62,26 @@ export class AuthController {
     appModel.password.setValue(authData.password);
   }
 
-  logout(): void {
+  async logout(): Promise<void> {
     const login: string | null = appModel.login.getValue();
     const password: string | null = appModel.password.getValue();
 
+    if (login === null || password === null) return;
     this.removeAppAuthData();
     this.removeStorageAuthData();
 
-    if (login === null || password === null) return;
-
-    connectionService.logout({
+    const response: ServerResponse<LogoutResponse> = await connectionService.logout({
       login,
       password,
     });
+
+    if (response.type === EventType.error) {
+      const modalWindow = new ErrorModalBlock({
+        message: { title: errorsNames.authorizationError, text: response.payload.error },
+      });
+
+      modalWindow.open();
+    }
   }
 
   removeStorageAuthData(): void {
